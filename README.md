@@ -1,12 +1,20 @@
 # backend-todo-task
 
+## Ejecutar el proyecto
+
+En el directorio del proyecto, puede ejecutar para correr el proyecto:
+
+### `npm install`
+
+Instalar dependencias para poder ejecutar el proyecto sin errores
+
 ### `npm run dev`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:4000) to view it in the browser.
+Ejecuta la aplicación en el modo de desarrollo.\
+Abrir [http://localhost:4000](http://localhost:4000) para verla en el navegador.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+La página se recargará si haces ediciones.\
+También verás cualquier error de lint en la consola.
 
 ### Eliminar la base de datos
 
