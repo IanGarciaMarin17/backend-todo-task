@@ -1,5 +1,6 @@
 import sqlite3 from 'sqlite3';
 import { Request } from 'express';
+import { Encrypt } from '../../../utils/encrypt';
 
 const db = new sqlite3.Database('todo-tasks.db');
 
@@ -24,7 +25,7 @@ export class TodoTaskService {
             completed: row.completed === 1,
           }));
           resolve({
-            data: tasks,
+            data: Encrypt.encrypt(JSON.stringify(tasks)),
             status: 200,
           });
         }
@@ -33,8 +34,9 @@ export class TodoTaskService {
   }
 
   public static async createTask(rq: Request): Promise<any> {
-    const title = rq.body.title;
-    const description = rq.body.description;
+    const bodyDecripted = JSON.parse(Encrypt.decrypt(rq.body.encryptedBody));
+    const title = bodyDecripted.title;
+    const description = bodyDecripted.description;
     return new Promise((resolve, reject) => {
       const stmt = db.prepare(
         'INSERT INTO tasks (title, description) VALUES (?, ?)'
@@ -43,7 +45,10 @@ export class TodoTaskService {
         if (err) {
           reject(err);
         } else {
-          resolve({ data: 'Tarea creada exitosamente', status: 201 });
+          resolve({
+            data: Encrypt.encrypt('Tarea creada exitosamente'),
+            status: 201,
+          });
         }
       });
       stmt.finalize();
@@ -51,8 +56,9 @@ export class TodoTaskService {
   }
 
   public static async updateTask(rq: Request): Promise<any> {
+    const bodyDecripted = JSON.parse(Encrypt.decrypt(rq.body.encryptedBody));
     const { id } = rq.params;
-    const completed = rq.body.completed ? 1 : 0;
+    const completed = bodyDecripted.completed ? 1 : 0;
     return new Promise((resolve, reject) => {
       db.run(
         'UPDATE tasks SET title = ?, description = ?, completed = ? WHERE id = ?',
@@ -61,7 +67,10 @@ export class TodoTaskService {
           if (err) {
             reject(err);
           } else {
-            resolve({ data: 'Tarea actualizada exitosamente', status: 200 });
+            resolve({
+              data: Encrypt.encrypt('Tarea actualizada exitosamente'),
+              status: 200,
+            });
           }
         }
       );
@@ -78,7 +87,10 @@ export class TodoTaskService {
           if (err) {
             reject(err);
           } else {
-            resolve({ data: 'Tarea actualizada exitosamente', status: 200 });
+            resolve({
+              data: Encrypt.encrypt('Tarea actualizada exitosamente'),
+              status: 200,
+            });
           }
         }
       );
@@ -92,7 +104,10 @@ export class TodoTaskService {
         if (err) {
           reject(err);
         } else {
-          resolve({ data: 'Tarea eliminada exitosamente', status: 200 });
+          resolve({
+            data: Encrypt.encrypt('Tarea eliminada exitosamente'),
+            status: 200,
+          });
         }
       });
     });
